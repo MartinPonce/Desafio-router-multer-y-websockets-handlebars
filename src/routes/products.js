@@ -3,14 +3,39 @@ const router = express.Router();
 
 // Middleware de validación de producto
 function validateProduct(req, res, next) {
-  // Validar el producto aquí
-  next();
+  // Verifica si hay errores de validación en la solicitud
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+    next();
 }
 
 // Crear un producto
-router.post('/', validateProduct, (req, res) => {
-  // Lógica para crear un producto
+
+router.post('/', validateProduct, async (req, res) => {
+  try {
+    // Extraer los datos del producto del cuerpo de la solicitud
+    const { name, price, category } = req.body;
+
+    // Crear una instancia del modelo de producto con los datos proporcionados
+    const newProduct = new Product({
+      name,
+      price,
+      category,
+    });
+
+    // Guardar el nuevo producto en la base de datos
+    await newProduct.save();
+
+    // Devolver una respuesta exitosa
+    res.status(201).json({ message: 'Producto creado exitosamente' });
+  } catch (error) {
+    // Manejar errores
+    res.status(500).json({ error: 'Error al crear el producto' });
+  }
 });
+
 
 
 

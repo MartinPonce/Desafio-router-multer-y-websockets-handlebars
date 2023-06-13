@@ -1,5 +1,3 @@
-// dao/productManager.js
-
 const Product = require('./models/Product');
 
 async function getAllProducts() {
