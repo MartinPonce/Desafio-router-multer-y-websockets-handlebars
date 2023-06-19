@@ -1,4 +1,3 @@
-//    * DESAFIO CLASE 8: ROUTER Y MULTER *    //   * DESAFIO WEBSOCKETS + HANDLEBARS *   //
 
 const express = require('express');
 const app = express();
@@ -21,12 +20,8 @@ mongoose.connect('mongodb://localhost/ecommerce', {
   console.error('Error al conectar a la base de datos:', error);
 });
 
-
-
 app.use('/products', productsRouter);
 app.use('/carts', cartsRouter);
-
-
 
 io.on('connection', (socket) => {
     console.log('Un cliente se ha conectado');
@@ -83,20 +78,6 @@ http.listen(port, () => {
 let products = [];
 let carts = [];
 
-// Middleware para verificar si un producto existe
-function validateProduct(req, res, next) {
-  const productId = req.params.id;
-  const product = products.find((product) => product.id === productId);
-
-  if (!product) {
-    return res.status(404).send('Producto no encontrado');
-  }
-
-  req.product = product;
-  next();
-}
-
-
 productsRouter.get('/', (req, res) => {
   // Obtener todos los productos
   res.json(products);
@@ -111,32 +92,6 @@ productsRouter.post('/', (req, res) => {
   // Crear un nuevo producto
   const newProduct = req.body;
 }),
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
   // Iniciar el servidor en el puerto 8080
 app.listen(8080, () => {
     console.log('Servidor escuchando en el puerto 8080');

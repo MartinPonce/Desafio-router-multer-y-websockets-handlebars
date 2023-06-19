@@ -1,12 +1,50 @@
+<h1>All Products</h1>
 {{#each products}}
-<div class="product">
-  <h3>{{name}}</h3>
-  <p>Precio: {{price}}</p>
-  <p>Categoría: {{category}}</p>
-  <p>Disponibilidad: {{availability}}</p>
-  <form action="/api/carts/{{cartId}}" method="POST">
-    <input type="hidden" name="products[]" value="{{_id}}">
-    <button type="submit">Agregar al carrito</button>
-  </form>
-</div>
+  <div>
+    <h2>{{this.title}}</h2>
+    <p>{{this.description}}</p>
+    <p>Price: {{this.price}}</p>
+    <p>{{this.thumbnail}}</p>
+    <p>{{this.code}}</p>
+    <p>{{this.stock}}</p>
+    <p>{{this.category}}</p>
+    <p>Availability: {{this.availability}}</p>
+    <a href="/products/{{this._id}}">ver bien a {{this._id}}</a>
+    <button onclick="putIntoCart('{{this._id}}')">AGREGAR AL CARRO
+      {{this._id}}</button>
+    <br />
+
+    <a href="/products/{{this._id}}">View Details</a>
+    <form action="/api/carts" method="POST">
+      <input type="hidden" name="productId" value="{{_id}}" />
+      <button type="submit">Add to Cart</button>
+    </form>
+  </div>
 {{/each}}
+
+totalPages:
+{{totalPages}}
+prevPage:
+{{prevPage}}
+nextPage:
+{{nextPage}}
+currentPage:
+{{currentPage}}
+hasPrevPage:
+{{hasPrevPage}}
+hasNextPage:
+{{hasNextPage}}
+prevLink:
+{{prevLink}}
+nextLink:
+{{nextLink}}
+
+<div class="pagination">
+  {{#if prevLink}}
+    <a href="{{prevLink}}">Previous</a>
+  {{/if}}
+
+  {{#if nextLink}}
+    <a href="{{nextLink}}">Next</a>
+  {{/if}}
+</div>
