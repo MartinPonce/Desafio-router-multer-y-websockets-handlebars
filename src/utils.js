@@ -1,13 +1,33 @@
+//----------------MULTER------------------------------
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, 'public'));
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+
+export const uploader = multer({
+  storage,
+});
+
+//----------------__DIRNAME------------------------------
+const path = require('path');
+const { fileURLToPath } = require('url');
+export const __filename = fileURLToPath(import.meta.url);
+export const __dirname = path.dirname(__filename);
+
 //---------------MONGO-------------
 const { connect } = require("mongoose");
 async function connectMongo() {
   try {
     await connect(
-      "mongodb+srv://mdpmclneurodiagnostic:Ncv677457000@backend51380.ig5oyhz.mongodb.net/?retryWrites=true&w=majority"
+      "mongodb+srv://mdpmclneurodiagnostic:Ncv677457000@backend51380.ig5oyhz.mongodb.net/Backend51380?retryWrites=true&w=majority"
     );
     console.log("plug to mongo!");
-    /* let student = await CartModel.find({}).populate("products.product");
-    console.log(JSON.stringify(student, null, 2)); */
   } catch (e) {
     console.log(e);
     throw "can not connect to the db";
