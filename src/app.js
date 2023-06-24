@@ -1,18 +1,25 @@
+const MongoStore = require('connect-mongo');
 const express = require('express');
+const handlebars = require('express-handlebars');
 const {engine} = require('express-handlebars');
 const productsRouter = require('./routes/products.router.js');
 const cartsRouter = require('./routes/carts.router.js');
 const viewsRouter = require('./routes/views.router.js');
 const chatRouter = require('./routes/chat.router.js');
+const session = require('express-session');
+const passport = require('passport');
 const path = require('path');
-const { __dirname, connectMongo, connectSocket, isAdmin } = require('./utils.js');
+const { iniPassport } = require('./config/passport.config.js');
+const { sessionsRouter } = require('./routes/sessions.router.js');
+const { viewsRouter } = require('./routes/views.router.js');
+const { __dirname, connectMongo, connectSocket } = require('./utils.js');
 const { usersRouter } = require('./routes/users.router.js');
-const {connectSocket} = require('./utils.js');
-const {connectMongo} = require('./utils.js');
+
+
 const { usersHtmlRouter } = require('./routes/users.html.router.js');
 
 const app = express();
-const port = 8080;
+const port = 3000;
 
 const httpServer = app.listen(port, () => {
     console.log(`Server running on port http://localhost:${port}`)
@@ -88,6 +95,36 @@ app.get("*", (req, res) => {
     });
 });
 
+app.use(
+  session({
+    store: MongoStore.create({ mongoUrl: 'mongodb+srv://mdpmclneurodiagnostic:Ncv677457000@backend51380.ig5oyhz.mongodb.net/?retryWrites=true&w=majority', ttl:7200 }),
+    secret: 'top-secret',
+    resave: true,
+    saveUninitialized: true,
+  })
+);
+
+//-----TODO LO DE PASSPORT-------
+iniPassport();
+app.use(passport.initialize());
+app.use(passport.session());
+//FIN TODO LO DE PASSPORT
+
+//---------CONFIG RUTAS------------
+app.use('/api/sessions', sessionsRouter);
+app.use('/', viewsRouter);
+/* app.use('/api/users', usersRouter);
+app.use('/api/pets', petsRouter);
+app.use('/users', usersHtmlRouter);
+app.use('/test-chat', testSocketChatRouter);
+app.use('/auth', authRouter); */
+app.get('*', (_, res) => {
+  return res.status(404).json({
+    status: 'error',
+    msg: 'no encontrado',
+    data: {},
+  });
+});
 
 
 //mongodb+srv://mdpmclneurodiagnostic:Ncv677457000@backend51380.ig5oyhz.mongodb.net/?retryWrites=true&w=majority
