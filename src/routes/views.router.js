@@ -21,6 +21,10 @@ viewsRouter.get("/", async (req, res) => {
   }
 });
 
+viewsRouter.get('/login', async (req, res) => {
+  res.render('login-github');
+});
+
 viewsRouter.get("/realtimeproducts", async (req, res) => {
   try {
     const products = await productService.get();
